@@ -1,0 +1,4 @@
+# go-robloxquery [![Go Report Card](https://goreportcard.com/badge/github.com/ZeroErrors/go-robloxquery)](https://goreportcard.com/report/github.com/ZeroErrors/go-robloxquery) [![GoDoc](https://godoc.org/github.com/ZeroErrors/go-robloxquery?status.svg)](https://godoc.org/github.com/ZeroErrors/go-robloxquery) [![Build Status](https://travis-ci.org/ZeroErrors/go-robloxquery.svg?branch=master)](https://travis-ci.org/ZeroErrors/go-robloxquery)
+A simple Go library to gather data from Roblox.
+
+_Note: This library only have partial support for the roblox API and there is much more data that could be gathered._
