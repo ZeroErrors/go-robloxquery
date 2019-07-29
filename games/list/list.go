@@ -9,6 +9,7 @@ import (
 
 // Request specifies the data to request
 type Request struct {
+	Timestamp                  int64   `url:"_"`
 	SortToken                  *string `url:"model.sortToken,omitempty"`
 	GameFilter                 *string `url:"model.gameFilter,omitempty"`
 	TimeFilter                 *string `url:"model.timeFilter,omitempty"`
@@ -62,8 +63,7 @@ func Do(request Request) (Response, error) {
 		return response, err
 	}
 
-	// Note: the '_' field is required for the request to work
-	req, err := http.NewRequest("GET", "https://games.roblox.com/v1/games/list?_=-1&"+v.Encode(), nil)
+	req, err := http.NewRequest("GET", "https://games.roblox.com/v1/games/list?"+v.Encode(), nil)
 	if err != nil {
 		return response, err
 	}
