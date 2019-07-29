@@ -7,22 +7,24 @@ import (
 	"net/http"
 )
 
+// Request specifies the data to request
 type Request struct {
 	SortToken                  *string `url:"model.sortToken,omitempty"`
 	GameFilter                 *string `url:"model.gameFilter,omitempty"`
 	TimeFilter                 *string `url:"model.timeFilter,omitempty"`
 	GenreFilter                *string `url:"model.genreFilter,omitempty"`
-	ExclusiveStartId           *int64  `url:"model.exclusiveStartId,omitempty"`
+	ExclusiveStartID           *int64  `url:"model.exclusiveStartId,omitempty"`
 	SortOrder                  *int    `url:"model.sortOrder,omitempty"`
-	GameSetTargetId            *int64  `url:"model.gameSetTargetId,omitempty"`
+	GameSetTargetID            *int64  `url:"model.gameSetTargetId,omitempty"`
 	Keyword                    *string `url:"model.keyword,omitempty"`
 	StartRows                  *int    `url:"model.startRows,omitempty"`
 	MaxRows                    *int    `url:"model.maxRows,omitempty"`
 	IsKeywordSuggestionEnabled *bool   `url:"model.isKeywordSuggestionEnabled,omitempty"`
-	ContextCountryRegionId     *int    `url:"model.contextCountryRegionId,omitempty"`
-	ContextUniverseId          *int64  `url:"model.contextUniverseId,omitempty"`
+	ContextCountryRegionID     *int    `url:"model.contextCountryRegionId,omitempty"`
+	ContextUniverseID          *int64  `url:"model.contextUniverseId,omitempty"`
 }
 
+// Response specifies the data that will be received as the reply
 type Response struct {
 	Games []struct {
 		CreatorID      int    `json:"creatorId"`
@@ -51,6 +53,7 @@ type Response struct {
 	NextPageExclusiveStartID int    `json:"nextPageExclusiveStartId"`
 }
 
+// Do makes a request with the provided Request data and returns either a Response or an error
 func Do(request Request) (Response, error) {
 	var response Response
 
@@ -59,7 +62,7 @@ func Do(request Request) (Response, error) {
 		return response, err
 	}
 
-	// Note: the '_' field is required for the request to go work for some reason
+	// Note: the '_' field is required for the request to work
 	req, err := http.NewRequest("GET", "https://games.roblox.com/v1/games/list?_=-1&"+v.Encode(), nil)
 	if err != nil {
 		return response, err
