@@ -1,29 +1,26 @@
 package list
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
+	"github.com/google/go-querystring/query"
 	"io/ioutil"
 	"net/http"
-	"reflect"
-	"strings"
 )
 
 type Request struct {
-	SortToken                  *string
-	GameFilter                 *string
-	TimeFilter                 *string
-	GenreFilter                *string
-	ExclusiveStartId           *int64
-	SortOrder                  *int
-	GameSetTargetId            *int64
-	Keyword                    *string
-	StartRows                  *int
-	MaxRows                    *int
-	IsKeywordSuggestionEnabled *bool
-	ContextCountryRegionId     *int
-	ContextUniverseId          *int64
+	SortToken                  *string `url:"model.sortToken,omitempty"`
+	GameFilter                 *string `url:"model.gameFilter,omitempty"`
+	TimeFilter                 *string `url:"model.timeFilter,omitempty"`
+	GenreFilter                *string `url:"model.genreFilter,omitempty"`
+	ExclusiveStartId           *int64  `url:"model.exclusiveStartId,omitempty"`
+	SortOrder                  *int    `url:"model.sortOrder,omitempty"`
+	GameSetTargetId            *int64  `url:"model.gameSetTargetId,omitempty"`
+	Keyword                    *string `url:"model.keyword,omitempty"`
+	StartRows                  *int    `url:"model.startRows,omitempty"`
+	MaxRows                    *int    `url:"model.maxRows,omitempty"`
+	IsKeywordSuggestionEnabled *bool   `url:"model.isKeywordSuggestionEnabled,omitempty"`
+	ContextCountryRegionId     *int    `url:"model.contextCountryRegionId,omitempty"`
+	ContextUniverseId          *int64  `url:"model.contextUniverseId,omitempty"`
 }
 
 type Response struct {
@@ -57,25 +54,13 @@ type Response struct {
 func Do(request Request) (Response, error) {
 	var response Response
 
-	valueOfRequest := reflect.ValueOf(request)
-	requestType := valueOfRequest.Type()
-
-	var query bytes.Buffer
-	for i := 0; i < valueOfRequest.NumField(); i++ {
-		field := valueOfRequest.Field(i)
-		if field.IsNil() {
-			continue
-		}
-		field = field.Elem()
-		query.WriteString("model.")
-		query.WriteString(requestType.Field(i).Name)
-		query.WriteString("=\"")
-		query.WriteString(strings.ReplaceAll(fmt.Sprintf("%v", field.Interface()), "\"", "\\\""))
-		query.WriteString("\"")
+	v, err := query.Values(request)
+	if err != nil {
+		return response, err
 	}
 
 	// Note: the '_' field is required for the request to go work for some reason
-	req, err := http.NewRequest("GET", "https://games.roblox.com/v1/games/list?_=-1&"+query.String(), nil)
+	req, err := http.NewRequest("GET", "https://games.roblox.com/v1/games/list?_=-1&"+v.Encode(), nil)
 	if err != nil {
 		return response, err
 	}
